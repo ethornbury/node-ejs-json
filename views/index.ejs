@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include partials/header %>
+    </head>
+    <body>
+          <div class="w3-container l3 w3-text-grey w3-padding" >
+            <% include partials/nav %>
+               
+                <div class="w3-row w3-grayscale">
+                    <div class="w3-col l1">
+                        <p></p>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Product List</h2>
+                        <ul>
+                            <% products.forEach(function(product) { %>
+                                <li><%= product.name %> - <%= product.cost %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Review List</h2>
+                        <ul>
+                            <% reviews.forEach(function(review) { %>
+                                <li><%= review.name %> - <%= review.content %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>User List</h2>
+                        <ul>
+                            <% users.forEach(function(user) { %>
+                                <li><%= user.name %> - <%= user.email %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                </div>
+            <% include partials/footer %>
+          </div>
+  </body>
+</html>
+  

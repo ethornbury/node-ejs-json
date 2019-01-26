@@ -5,12 +5,12 @@
         "cost": 2.99
     },
     {
-         "id": 1,
+         "id": 2,
         "name": "bananas",
         "cost": 1.99
     },
     {
-         "id": 1,
+         "id": 3,
         "name": "milk",
         "cost": 1.50
     }

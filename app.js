@@ -26,10 +26,21 @@ app.get('/', function(req, res) {
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
  
+
 app.get('/products', function(req, res) {
   res.render("products", {products:products});
   console.log("Product page now rendered");    // the log function is used to output data to the terminal. 
 });
+
+app.get('/item/:id', function(req, res) {
+  var p = req.params.id;
+  console.log(req.params.id);
+  //res.render("item", {products: products});
+  res.render("item", {products: products, p: req.params.id});
+  //res.render("item"), {p: req.params.id};
+  console.log("item page now rendered");    // the log function is used to output data to the terminal. 
+});
+
 
 app.get('/users', function(req, res){
     res.render("users", {users:users});

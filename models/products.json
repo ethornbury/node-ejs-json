@@ -4,11 +4,15 @@
         "name": "apples",
         "cost": 2.99
     },
+    
+    
     {
          "id": 2,
         "name": "bananas",
         "cost": 1.99
     },
+    
+    
     {
          "id": 3,
         "name": "milk",

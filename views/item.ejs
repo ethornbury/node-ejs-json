@@ -14,9 +14,10 @@
                     <div class="w3-col l3">
                         <h2>Item</h2>
                         <ul>
-                            <%// p = 1 %>
-                          
+
                                 <li><%- products[p].name %> - <%- products[p].cost %></li>
+                                <a href="/delete-item/<%- products[p].id %>" >Delete</a>
+                                 
                                 <a href="/products" class="w3-bar-item w3-button">Products</a>
                           
                         </ul>

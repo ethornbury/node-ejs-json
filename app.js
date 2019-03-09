@@ -37,11 +37,17 @@ app.get('/products', function(req, res) {
 app.get('/item/:id', function(req, res) {
   var p = req.params.id;
   console.log(req.params.id);
-  //res.render("item", {products: products});
   res.render("item", {products: products, p: req.params.id});
-  //res.render("item"), {p: req.params.id};
   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
 });
+
+
+app.delete = function(req, res) {
+ var deleteCustomer = products["product" + req.params.id];
+    delete products["product" + req.params.id];
+    console.log("--->After deletion, customer list:\n" + JSON.stringify(products, null, 4) );
+    res.end( "Deleted customer: \n" + JSON.stringify(deleteCustomer, null, 4));
+};
 
 
 app.get('/users', function(req, res){
@@ -54,6 +60,8 @@ app.get('/about', function(req, res) {
 	console.log("about page now rendered");
 });
 
+
+//file upload ---------------
 const multerConfig = {
     
 storage: multer.diskStorage({
@@ -65,7 +73,9 @@ storage: multer.diskStorage({
     //Then give the file a unique name
     filename: function(req, file, next){
         console.log(file);
+        //get the file mimetype ie 'image/jpeg' split and prefer the second value ie'jpeg'
         const ext = file.mimetype.split('/')[1];
+        //set the file fieldname to a unique name containing the original name, current datetime and the extension.
         next(null, file.fieldname + '-' + Date.now() + '.'+ext);
       }
     }),   
@@ -75,6 +85,7 @@ storage: multer.diskStorage({
           if(!file){
             next();
           }
+        // only permit image mimetypes
         const image = file.mimetype.startsWith('image/');
         if(image){
           console.log('photo uploaded');
@@ -94,10 +105,14 @@ app.get('/upload', function(req, res) {
 	console.log("upload page now rendered");
 });
 app.post('/upload',multer(multerConfig).single('photo'),function(req,res){
-   res.send('Complete!');
+  res.render("index", {products:products, reviews:reviews, users:users});
+  //res.send('Complete!');
 });
 
-  // This function gets the application up and running on the development server.
+//file upload end ------------- 
+
+
+// This function gets the application up and running on the development server.
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
   console.log("Yippee its running");
 })

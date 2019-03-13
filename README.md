@@ -20,6 +20,8 @@ To set up the environment
 	
 	$ npm install node.date-time //so I can use a timestamp in the log file
 	
+	$ npm install formidable //file uploader
+	
 	
     
 to create a link [Gearhost](http://gearhost.com) 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include partials/header %>
+    </head>
+    <body>
+        <div class="w3-container l3 w3-text-grey w3-padding" >
+            <% include partials/nav %>
+                <div class="w3-row w3-grayscale">
+                    <div class="w3-col l1">
+                        <p></p>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Add Contact</h2>
+                    <!--    <form accept-charset="UTF-8" action="/add-contact" method="post" class="w3-container">
+                    -->
+                        <form action="/add-contact" method="post" class="w3-container">        
+                            <div class="item">
+                                <label for="name">Name</label>
+                                <br />
+                                <input name="name" type="text" class="w3-input"/>
+                                <br />
+                                <label for="email">Email</label>
+                                <br />
+                                <input name="email" type="text" class="w3-input"/>
+                                <br />
+                                <label for="comment">Comment</label>
+                                <br />
+                                <textarea class="w3-input" name="comment" type="text"></textarea>
+                                <br />
+                                <button class="w3-btn w3-teal">Add</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                    <div class="w3-col l3">
+                    </div>
+                    <div class="w3-col l3">
+                    </div>
+                </div>
+            <% include partials/footer %>
+          </div>
+    </body>
+</html>

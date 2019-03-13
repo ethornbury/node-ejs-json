@@ -1,22 +1,17 @@
 [
     {
         "id": 1,
-        "name": "apples",
-        "cost": 2.99
-    },
-    
-    
-    {
-         "id": 2,
-        "name": "bananas",
+        "name": "bananas 1",
         "cost": 1.99
     },
-    
-    
-    {
-         "id": 3,
-        "name": "milk",
-        "cost": 1.50
+     {
+        "id": 2,
+        "name": "bananas 2",
+        "cost": 1.99
+    },
+     {
+        "id": 3,
+        "name": "bananas 3",
+        "cost": 1.99
     }
-    
 ]

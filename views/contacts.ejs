@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include partials/header %>
+    </head>
+    <body>
+          <div class="w3-container l3 w3-text-grey w3-padding" >
+            <% include partials/nav %>
+               
+                <div class="w3-row w3-grayscale">
+                    <div class="w3-col l1">
+                        <p></p>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Contact List</h2>
+                        <ul>
+                            <% contacts.forEach(function(contact) { %>
+                                <li><%= contact.name %> - <%= contact.email %></li>
+                                <li>comment - <%= contact.comment %></li>
+                               
+                            <% }); %>
+                        </ul>
+                    </div>
+                </div>
+            <% include partials/footer %>
+          </div>
+  </body>
+</html>
+  

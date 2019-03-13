@@ -1,9 +1,11 @@
 /**
- * 
+ * create products, search functionailty, 
  */
 var express = require("express");
 var app = express();
-
+app.use(express.static("views"));       // Allow access to content of views folder
+app.use(express.static("scripts"));     // Allow access to scripts folder
+app.use(express.static("images"));      // Allow access to images folder
 app.set("view engine", "ejs"); // This line sets the default view wngine 
 
 var http = require('http');
@@ -13,14 +15,10 @@ const multer = require('multer'); // file storing middleware
 var fs = require('fs');
 app.use(bodyParser.urlencoded({extended:false})); //handle body requests
 
-app.use(express.static("views"));       // Allow access to content of views folder
-app.use(express.static("scripts"));     // Allow access to scripts folder
-app.use(express.static("images"));      // Allow access to images folder
-
-
 var products = require("./models/products.json");    // allow the app to access the products.json file
 var reviews = require("./models/reviews.json");  
 var users = require("./models/users.json");
+var contacts = require("./models/contacts.json");
 
 // This function calls the index view when somebody goes to the site route.
 app.get('/', function(req, res) {
@@ -35,20 +33,94 @@ app.get('/products', function(req, res) {
 });
 
 app.get('/item/:id', function(req, res) {
-  var p = req.params.id;
+  var json = JSON.stringify(products);
+  var keyToFind = parseInt(req.params.id); // call name from the url
+  var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
   console.log(req.params.id);
-  res.render("item", {products: products, p: req.params.id});
+  //parse json info then select the item with correct id 
+  res.render("item", {products: products, p: index});
   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
 });
 
 
-app.delete = function(req, res) {
- var deleteCustomer = products["product" + req.params.id];
-    delete products["product" + req.params.id];
-    console.log("--->After deletion, customer list:\n" + JSON.stringify(products, null, 4) );
-    res.end( "Deleted customer: \n" + JSON.stringify(deleteCustomer, null, 4));
-};
+app.delete('delete-item-0/:id', function(req, res) {
+  
+ //var deleteCustomer = products["product" + req.params.id];
+  var p = req.params.id;
+    delete products[p];
+    console.log("deleted ", p);
+    res.render("products", {products:products});
+    //console.log("--->After deletion, customer list:\n" + JSON.stringify(products, null, 4) );
+    //res.end( "Deleted customer: \n" + JSON.stringify(deleteCustomer, null, 4));
+    
+});
 
+//liams
+app.get('/delete-item/:id', function(req, res) {
+  var json = JSON.stringify(products);
+  var keyToFind = parseInt(req.params.id); // call name from the url
+    //var data = products; //this declares data = str2
+    var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
+    products.splice(index ,1); // deletes one item from position represented by index  (its position) from above
+    json = JSON.stringify(products, null, 4); //turns it back to json
+    fs.writeFile('./models/products.json', json, 'utf8'); // Writing the data back to the file
+    console.log("Product Deleted");
+  
+  res.redirect("/products");
+});
+//   ==============
+
+// route to render contact info page 
+app.get("/contacts", function(req, res){
+    res.render("contacts.ejs", {contacts: contacts});
+    console.log("on contacts page!")
+});
+
+app.get("/add-contact", function(req, res){
+    res.render("add-contact.ejs");
+    console.log("on add contact page!")
+});
+
+// route to render contact info page 
+app.post("/add-contact", function(req, res){
+    // function to find the max id
+  	function getMax(contacts , id) {
+		var max
+		for (var i=0; i<contacts.length; i++) {
+			if(!max || parseInt(contacts[i][id]) > parseInt(max[id]))
+				max = contacts[i];
+  		}
+  		return max;
+  	}
+	var maxPpg = getMax(contacts, "id"); // This calls the function above and passes the result as a variable called maxPpg.
+	var newId = maxPpg.id + 1;  // this creates a nwe variable called newID which is the max Id + 1
+	console.log(newId); // We console log the new id for show reasons only
+    
+	// create a new product based on what we have in our form on the add page 
+	
+	var contactsx = {
+    name: req.body.name,
+    id: newId,
+    comment: req.body.comment,
+    email: req.body.email
+  };
+  console.log(contactsx);
+  var json = JSON.stringify(contacts); // Convert our json data to a string
+  
+  // The following function reads the new data and pushes it into our JSON file
+  fs.readFile('./models/contacts.json', 'utf8', function readFileCallback(err, data){
+    if(err){
+     throw(err);
+    } else {
+      contacts.push(contactsx); // add the data to the json file based on the declared variable above
+      json = JSON.stringify(contacts, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
+      fs.writeFile('./models/contacts.json', json, 'utf8')
+    }
+  })
+  res.redirect("/contacts");
+  console.log("Add-contact page now rendered"); 
+});
+//=====
 
 app.get('/users', function(req, res){
     res.render("users", {users:users});

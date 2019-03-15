@@ -7,21 +7,19 @@
           <div class="w3-container l3 w3-text-grey w3-padding" >
             <% include partials/nav %>
                
-                <div class="w3-row w3-grayscale">
+                <div class="w3-row ">
                     <div class="w3-col l1">
                         <p></p>
                     </div>
                     <div class="w3-col l3">
                         <h2>Item</h2>
-                        
-                        <ul>
-
-                                <li><%= products[p].name %> - <%= products[p].cost %></li>
-                                <a href="/delete-item/<%= products[p].id %>" >Delete</a>
-                                 
-                                <a href="/products" class="w3-bar-item w3-button">Products</a>
-                          
-                        </ul>
+                        <div class="w3-panel w3-border w3-hover-border-teal">
+                            <br />
+                            <%= products[p].name %> - &euro;<%= products[p].cost %>
+                            <br /><br />
+                            <a href="/delete-item/<%= products[p].id %>" class="w3-button w3-teal">Delete</a> &ensp; <a href="/products" class="w3-button w3-teal">Back to Products</a>
+                            <br /><br />
+                        </div>
                     </div>
                     <div class="w3-col l3">
                         

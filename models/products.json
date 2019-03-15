@@ -1,17 +1,27 @@
 [
     {
         "id": 1,
-        "name": "bananas 1",
-        "cost": 1.99
+        "name": "Bananas",
+        "cost": 1
     },
-     {
+    {
         "id": 2,
-        "name": "bananas 2",
-        "cost": 1.99
+        "name": "Apples",
+        "cost": 2.5
     },
-     {
+    {
         "id": 3,
-        "name": "bananas 3",
-        "cost": 1.99
+        "name": "Milk",
+        "cost": 1.25
+    },
+    {
+        "name": "Bread",
+        "id": 4,
+        "cost": "3.50"
+    },
+    {
+        "name": "Noodles",
+        "id": 5,
+        "cost": "0.79"
     }
 ]

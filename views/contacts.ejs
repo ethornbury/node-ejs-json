@@ -7,19 +7,31 @@
           <div class="w3-container l3 w3-text-grey w3-padding" >
             <% include partials/nav %>
                
-                <div class="w3-row w3-grayscale">
+                <div class="w3-row">
                     <div class="w3-col l1">
                         <p></p>
                     </div>
                     <div class="w3-col l3">
                         <h2>Contact List</h2>
-                        <ul>
-                            <% contacts.forEach(function(contact) { %>
-                                <li><%= contact.name %> - <%= contact.email %></li>
-                                <li>comment - <%= contact.comment %></li>
-                               
-                            <% }); %>
-                        </ul>
+                        
+                        <% contacts.forEach(function(contact) { %>
+                            <div class="w3-panel w3-border w3-hover-border-teal">
+                                <%= contact.name %> - <%= contact.email %>
+                                <br />
+                                comment - <%= contact.comment %>
+                            </div>
+                           
+                        <% }); %>
+
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>&nbsp;</h2>
+                        <br />
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Add Contact</h2>
+                        <br />
+                        <a href="/add-contact" class="w3-button w3-teal">Add new Contact</a>
                     </div>
                 </div>
             <% include partials/footer %>

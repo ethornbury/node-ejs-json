@@ -22,7 +22,7 @@ var contacts = require("./models/contacts.json");
 
 // This function calls the index view when somebody goes to the site route.
 app.get('/', function(req, res) {
-  res.render("index", {products:products, reviews:reviews, users:users});
+  res.render("index", {products:products, reviews:reviews, contacts:contacts});
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
  
@@ -42,20 +42,15 @@ app.get('/item/:id', function(req, res) {
   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
 });
 
-
 app.delete('delete-item-0/:id', function(req, res) {
-  
  //var deleteCustomer = products["product" + req.params.id];
   var p = req.params.id;
     delete products[p];
     console.log("deleted ", p);
     res.render("products", {products:products});
-    //console.log("--->After deletion, customer list:\n" + JSON.stringify(products, null, 4) );
-    //res.end( "Deleted customer: \n" + JSON.stringify(deleteCustomer, null, 4));
-    
 });
 
-//liams
+//liams -  modified by me!
 app.get('/delete-item/:id', function(req, res) {
   var json = JSON.stringify(products);
   var keyToFind = parseInt(req.params.id); // call name from the url
@@ -68,7 +63,51 @@ app.get('/delete-item/:id', function(req, res) {
   
   res.redirect("/products");
 });
-//   ==============
+
+app.get("/add-item", function(req, res){
+    res.render("add-item.ejs");
+    console.log("on the add item page!")
+});
+
+app.post("/add-item", function(req, res){
+    // function to find the max id
+  	function getPMax(products , id) {
+		var pmax
+		for (var i=0; i< products.length; i++) {
+			if(!pmax || parseInt(products[i][id]) > parseInt(pmax[id]))
+				pmax = products[i];
+  		}
+  		return pmax;
+  	}
+	var maxPpgp = getPMax(products, "id"); // This calls the function above and passes the result as a variable called maxPpg.
+	var newPId = maxPpgp.id + 1;  // this creates a nwe variable called newID which is the max Id + 1
+	console.log(newPId); // We console log the new id for show reasons only
+    
+	// create a new product based on what we have in our form on the add page 
+	var productsx = {
+    name: req.body.name,
+    id: newPId,
+    cost: req.body.cost,
+  };
+  console.log(productsx);
+  var pjson = JSON.stringify(products); // Convert our json data to a string
+  
+  // The following function reads the new data and pushes it into our JSON file
+  fs.readFile('./models/products.json', 'utf8', function readFileCallback(err, data){
+    if(err){
+     throw(err);
+    } else {
+      products.push(productsx); // add the data to the json file based on the declared variable above
+      pjson = JSON.stringify(products, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
+      fs.writeFile('./models/products.json', pjson, 'utf8')
+    }
+  })
+  res.redirect("/products");
+  console.log("Item added and back to products list"); 
+});
+//=====
+
+//   ============== end of product and item functions
 
 // route to render contact info page 
 app.get("/contacts", function(req, res){
@@ -118,7 +157,7 @@ app.post("/add-contact", function(req, res){
     }
   })
   res.redirect("/contacts");
-  console.log("Add-contact page now rendered"); 
+  console.log("Add-contact page rendered and contact added"); 
 });
 //=====
 

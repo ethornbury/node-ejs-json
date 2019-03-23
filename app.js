@@ -178,25 +178,24 @@ app.get('/about', function(req, res) {
 });
 
 
-//file upload ---------------
+// ---- file upload function - specifically an image
 const multerConfig = {
-    
-storage: multer.diskStorage({
- //Setup where the user's file will go
- destination: function(req, file, next){
-   next(null, './public/photo-storage');
-   },   
-    
-    //Then give the file a unique name
-    filename: function(req, file, next){
-        console.log(file);
-        //get the file mimetype ie 'image/jpeg' split and prefer the second value ie'jpeg'
-        const ext = file.mimetype.split('/')[1];
-        //set the file fieldname to a unique name containing the original name, current datetime and the extension.
-        next(null, file.fieldname + '-' + Date.now() + '.'+ext);
-      }
+   storage: multer.diskStorage({
+     //Setup where the user's file will go
+     destination: function(req, file, next){
+       next(null, './public/photo-storage');
+     },   
+      
+      //Then give the file a unique name
+      filename: function(req, file, next){
+          console.log(file);
+          //get the file mimetype ie 'image/jpeg' split and prefer the second value ie'jpeg'
+          const ext = file.mimetype.split('/')[1];
+          //set the file fieldname to a unique name containing the original name, current datetime and the extension.
+          next(null, file.fieldname + '-' + Date.now() + '.'+ext);
+        }
     }),   
-    
+      
     //A means of ensuring only images are uploaded. 
     fileFilter: function(req, file, next){
           if(!file){
@@ -214,13 +213,15 @@ storage: multer.diskStorage({
           return next();
         }
     }
-  };
+};
   
-
+// ---- file upload page rendered
 app.get('/upload', function(req, res) {
 	res.render('upload');
 	console.log("upload page now rendered");
 });
+
+// ---- file upload function using multerConfig from above
 app.post('/upload',multer(multerConfig).single('photo'),function(req,res){
   res.render("index", {products:products, reviews:reviews, users:users});
   //res.send('Complete!');

@@ -181,16 +181,13 @@ app.get('/edit-contact/:name', function(req, res){
 app.post('/edit-contact/:name', function(req, res){
 	var json = JSON.stringify(contacts);
 	var keyToFind = req.params.name; // call name from the url
-	var data = contacts;
-	//var index = data.map(function(contact) {return contact.name;}).indexOf(keyToFind)
+
   var index = contacts.map(function(contact) {return contact.name;}).indexOf(keyToFind);
-
-
 	console.log("index ", index);
 	console.log("keyToFind ", keyToFind);
-	console.log("req.body.id ", req.body.id);
+	// console.log("req.body.id ", req.body.id); //testing line
 	
-	var w = parseInt(req.body.newid);
+	var w = parseInt(req.body.newid); //keeping the var as an int as it would be changed to a string
 	var x = req.body.newname;
 	var y = req.body.newemail;
 	var z = req.body.newcomment;
@@ -199,16 +196,6 @@ app.post('/edit-contact/:name', function(req, res){
 	json = JSON.stringify(contacts, null, 4);
 	fs.writeFile('./models/contacts.json', json, 'utf8'); // Writing the data back to the file
   console.log(w, x, y, z, index);
-  // The following function reads the new data and pushes it into our JSON file
-  //fs.readFile('./models/contacts.json', 'utf8', function readFileCallback(err, data){
-  //  if(err){
-  //   throw(err);
-  //  } else {
-  //    contacts.push(newContact); // add the data to the json file based on the declared variable above
-  //    json = JSON.stringify(contacts, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
-  //    fs.writeFile('./models/contacts.json', json, 'utf8')
-  //  }
-  //})
   res.redirect("/contacts");
 });
 

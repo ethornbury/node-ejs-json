@@ -15,23 +15,26 @@ const multer = require('multer'); // file storing middleware
 var fs = require('fs');
 app.use(bodyParser.urlencoded({extended:false})); //handle body requests
 
-var products = require("./models/products.json");    // allow the app to access the products.json file
+// allow the app to access the all the json files
+var products = require("./models/products.json");    
 var reviews = require("./models/reviews.json");  
 var users = require("./models/users.json");
 var contacts = require("./models/contacts.json");
 
-// This function calls the index view when somebody goes to the site route.
+// This function calls the index view when somebody goes to the site - routes.
 app.get('/', function(req, res) {
   res.render("index", {products:products, reviews:reviews, contacts:contacts});
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
  
-
+// ---- CRUD functions on products.json
+// ---- view all products
 app.get('/products', function(req, res) {
   res.render("products", {products:products});
   console.log("Product page now rendered");    // the log function is used to output data to the terminal. 
 });
 
+// ---- view one product
 app.get('/item/:id', function(req, res) {
   var json = JSON.stringify(products);
   var keyToFind = parseInt(req.params.id); // call name from the url
@@ -42,6 +45,8 @@ app.get('/item/:id', function(req, res) {
   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
 });
 
+// ---- delete one product - how not to do it!
+// unreliable as not specific enough and may delete the wrong product
 app.delete('delete-item-0/:id', function(req, res) {
  //var deleteCustomer = products["product" + req.params.id];
   var p = req.params.id;
@@ -50,11 +55,10 @@ app.delete('delete-item-0/:id', function(req, res) {
     res.render("products", {products:products});
 });
 
-//liams -  modified by me!
+// ---- delete one product
 app.get('/delete-item/:id', function(req, res) {
   var json = JSON.stringify(products);
-  var keyToFind = parseInt(req.params.id); // call name from the url
-    //var data = products; //this declares data = str2
+  var keyToFind = parseInt(req.params.id); // get id from the url
     var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
     products.splice(index ,1); // deletes one item from position represented by index  (its position) from above
     json = JSON.stringify(products, null, 4); //turns it back to json
@@ -64,11 +68,13 @@ app.get('/delete-item/:id', function(req, res) {
   res.redirect("/products");
 });
 
+// ---- create a product, renders page with form
 app.get("/add-item", function(req, res){
     res.render("add-item.ejs");
     console.log("on the add item page!")
 });
 
+// ---- create a product function
 app.post("/add-item", function(req, res){
     // function to find the max id
   	function getPMax(products , id) {
@@ -105,22 +111,21 @@ app.post("/add-item", function(req, res){
   res.redirect("/products");
   console.log("Item added and back to products list"); 
 });
-//=====
 
-//   ============== end of product and item functions
 
-// route to render contact info page 
+// ---- view all contacts in a list 
 app.get("/contacts", function(req, res){
     res.render("contacts.ejs", {contacts: contacts});
     console.log("on contacts page!")
 });
 
+// ---- add contact page rendered 
 app.get("/add-contact", function(req, res){
     res.render("add-contact.ejs");
     console.log("on add contact page!")
 });
 
-// route to render contact info page 
+// ---- create a contact function 
 app.post("/add-contact", function(req, res){
     // function to find the max id
   	function getMax(contacts , id) {
@@ -161,6 +166,7 @@ app.post("/add-contact", function(req, res){
 });
 //=====
 
+// ---- read all users
 app.get('/users', function(req, res){
     res.render("users", {users:users});
     console.log("User page now rendered");

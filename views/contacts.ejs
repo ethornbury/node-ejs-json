@@ -18,7 +18,8 @@
                             <div class="w3-panel w3-border w3-hover-border-teal">
                                 <%= contact.name %> - <%= contact.email %>
                                 <br />
-                                comment - <%= contact.comment %>
+                                comment - <%= contact.comment %> &ensp; &ensp; <a href="/edit-contact/<%= contact.name %>" class="w3-button w3-teal" >Edit</a>
+                                <br />
                             </div>
                            
                         <% }); %>

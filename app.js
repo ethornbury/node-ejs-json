@@ -23,6 +23,7 @@ var contacts = require("./models/contacts.json");
 
 // This function calls the index view when somebody goes to the site - routes.
 app.get('/', function(req, res) {
+  // renders the index page showing products, reviews annd contacts from json files
   res.render("index", {products:products, reviews:reviews, contacts:contacts});
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
@@ -164,7 +165,54 @@ app.post("/add-contact", function(req, res){
   res.redirect("/contacts");
   console.log("Add-contact page rendered and contact added"); 
 });
-//=====
+
+// ---- update a contact
+app.get('/edit-contact/:name', function(req, res){
+  console.log("edit-contact page renderned");
+  function chooseContact(indOne){
+		return indOne.name === req.params.name;	 		
+  }
+	
+ 	var indOne = contacts.filter(chooseContact);
+	res.render("edit-contact",{indOne:indOne});
+ 	console.log(indOne);
+});
+
+app.post('/edit-contact/:name', function(req, res){
+	var json = JSON.stringify(contacts);
+	var keyToFind = req.params.name; // call name from the url
+	var data = contacts;
+	//var index = data.map(function(contact) {return contact.name;}).indexOf(keyToFind)
+  var index = contacts.map(function(contact) {return contact.name;}).indexOf(keyToFind);
+
+
+	console.log("index ", index);
+	console.log("keyToFind ", keyToFind);
+	console.log("req.body.id ", req.body.id);
+	
+	var w = parseInt(req.body.newid);
+	var x = req.body.newname;
+	var y = req.body.newemail;
+	var z = req.body.newcomment;
+	
+	contacts.splice(index, 1 , {id: w, name: x, email: y, comment: z} );
+	json = JSON.stringify(contacts, null, 4);
+	fs.writeFile('./models/contacts.json', json, 'utf8'); // Writing the data back to the file
+  console.log(w, x, y, z, index);
+  // The following function reads the new data and pushes it into our JSON file
+  //fs.readFile('./models/contacts.json', 'utf8', function readFileCallback(err, data){
+  //  if(err){
+  //   throw(err);
+  //  } else {
+  //    contacts.push(newContact); // add the data to the json file based on the declared variable above
+  //    json = JSON.stringify(contacts, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
+  //    fs.writeFile('./models/contacts.json', json, 'utf8')
+  //  }
+  //})
+  res.redirect("/contacts");
+});
+
+
 
 // ---- read all users
 app.get('/users', function(req, res){
@@ -178,7 +226,8 @@ app.get('/about', function(req, res) {
 });
 
 
-// ---- file upload function - specifically an image
+// ---- file upload 
+// ---- function - specifically an image
 const multerConfig = {
    storage: multer.diskStorage({
      //Setup where the user's file will go
@@ -229,8 +278,7 @@ app.post('/upload',multer(multerConfig).single('photo'),function(req,res){
 
 //file upload end ------------- 
 
-
-// This function gets the application up and running on the development server.
+// ---- This function gets the application up and running on the development server.
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
   console.log("Yippee its running");
 })

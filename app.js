@@ -77,25 +77,25 @@ app.get("/add-item", function(req, res){
 // ---- create a product function
 app.post("/add-item", function(req, res){
     // function to find the max id
-  	function getPMax(products , id) {
-		var pmax
-		for (var i=0; i< products.length; i++) {
-			if(!pmax || parseInt(products[i][id]) > parseInt(pmax[id]))
-				pmax = products[i];
-  		}
-  		return pmax;
+  	function getMaxProduct(products , id) {
+  		var productMax
+  		for (var i=0; i< products.length; i++) {
+  			if(!productMax || parseInt(products[i][id]) > parseInt(productMax[id]))
+  				productMax = products[i];
+    		}
+  		return productMax;
   	}
-	var maxPpgp = getPMax(products, "id"); // This calls the function above and passes the result as a variable called maxPpg.
-	var newPId = maxPpgp.id + 1;  // this creates a nwe variable called newID which is the max Id + 1
-	console.log(newPId); // We console log the new id for show reasons only
+	var maxPID = getMaxProduct(products, "id"); // This calls the function above and passes the result as a variable called maxPID.
+	var newProductID = maxPID.id + 1;  // this creates a new variable called newProductID which is the maxPID + 1
+	console.log( newProductID); // We console log the new id for show reasons only
     
 	// create a new product based on what we have in our form on the add page 
-	var productsx = {
-    name: req.body.name,
-    id: newPId,
-    cost: req.body.cost,
+	var newProductInfo = {
+    name: req.body.name,  //data from form
+    id:  newProductID,    //data from function
+    cost: req.body.cost,  //data from form
   };
-  console.log(productsx);
+  console.log(newProductInfo);
   var pjson = JSON.stringify(products); // Convert our json data to a string
   
   // The following function reads the new data and pushes it into our JSON file
@@ -103,7 +103,7 @@ app.post("/add-item", function(req, res){
     if(err){
      throw(err);
     } else {
-      products.push(productsx); // add the data to the json file based on the declared variable above
+      products.push(newProductInfo); // add the data to the json file based on the declared variable above
       pjson = JSON.stringify(products, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
       fs.writeFile('./models/products.json', pjson, 'utf8')
     }
@@ -127,28 +127,28 @@ app.get("/add-contact", function(req, res){
 
 // ---- create a contact function 
 app.post("/add-contact", function(req, res){
-    // function to find the max id
+    // function to find the max id of objects in json file
   	function getMax(contacts , id) {
-		var max
-		for (var i=0; i<contacts.length; i++) {
-			if(!max || parseInt(contacts[i][id]) > parseInt(max[id]))
-				max = contacts[i];
-  		}
-  		return max;
+  		var max
+  		for (var i=0; i<contacts.length; i++) {
+  			if(!max || parseInt(contacts[i][id]) > parseInt(max[id]))
+  				max = contacts[i];
+    		}
+    		return max;
   	}
-	var maxPpg = getMax(contacts, "id"); // This calls the function above and passes the result as a variable called maxPpg.
-	var newId = maxPpg.id + 1;  // this creates a nwe variable called newID which is the max Id + 1
-	console.log(newId); // We console log the new id for show reasons only
+	var maxContactId = getMax(contacts, "id"); // This calls the function above and passes the result as a variable called maxContactId.
+	var newMaxID = maxContactId.id + 1;  // this creates a nwe variable called newMaxID which is the max Id + 1
+	console.log(newMaxID); // We console log the newMaxID for show reasons only
     
-	// create a new product based on what we have in our form on the add page 
+	// create a new contact based on what we have in our form on the add page 
 	
-	var contactsx = {
-    name: req.body.name,
-    id: newId,
-    comment: req.body.comment,
-    email: req.body.email
+	var newContact = {
+    name: req.body.name,       //from form
+    id: newMaxID,              //from function above
+    comment: req.body.comment, //from form
+    email: req.body.email      //from form
   };
-  console.log(contactsx);
+  console.log(newContact); //show new contact details in console
   var json = JSON.stringify(contacts); // Convert our json data to a string
   
   // The following function reads the new data and pushes it into our JSON file
@@ -156,7 +156,7 @@ app.post("/add-contact", function(req, res){
     if(err){
      throw(err);
     } else {
-      contacts.push(contactsx); // add the data to the json file based on the declared variable above
+      contacts.push(newContact); // add the data to the json file based on the declared variable above
       json = JSON.stringify(contacts, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
       fs.writeFile('./models/contacts.json', json, 'utf8')
     }

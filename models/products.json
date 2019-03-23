@@ -23,5 +23,10 @@
         "name": "Noodles",
         "id": 5,
         "cost": "0.79"
+    },
+    {
+        "name": "Water",
+        "id": 6,
+        "cost": "1.20"
     }
 ]

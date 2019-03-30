@@ -22,7 +22,14 @@ To set up the environment
 	
 	$ npm install formidable //file uploader
 	
+	$npm install mysql
+    
+    
+I set a free mysql database in [Gearhost](http://gearhost.com) and the project links to it.
+
+Use Workbench, set up a new connection with the details from Gearhost and view database locally.
+	
 	
     
-to create a link [Gearhost](http://gearhost.com) 
+Link to [Gearhost](http://gearhost.com) 
 

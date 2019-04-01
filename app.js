@@ -8,18 +8,51 @@ app.use(express.static("scripts"));     // Allow access to scripts folder
 app.use(express.static("images"));      // Allow access to images folder
 app.set("view engine", "ejs"); // This line sets the default view wngine 
 
-var http = require('http');
-var bodyParser = require("body-parser");
-const multer = require('multer'); // file storing middleware
+require('dotenv').config(); //for creating environment variables in the .env file used for DB connection
+
+var mysql       = require('mysql');
+var http        = require('http');
+var bodyParser  = require("body-parser");
+const multer    = require('multer'); // file storing middleware
 //var formidable = require('formidable');
-var fs = require('fs');
+var fs          = require('fs');
 app.use(bodyParser.urlencoded({extended:false})); //handle body requests
 
 // allow the app to access the all the json files
-var products = require("./models/products.json");    
-var reviews = require("./models/reviews.json");  
-var users = require("./models/users.json");
-var contacts = require("./models/contacts.json");
+var products  = require("./models/products.json");    
+var reviews   = require("./models/reviews.json");  
+var users     = require("./models/users.json");
+var contacts  = require("./models/contacts.json");
+
+//
+console.log('current: ' + new Date(Date.now()).toLocaleString());    //testing by sending current timestamp to console
+var wstream = fs.createWriteStream('./logs/logger.txt');    //create a log of activity with current timestamp in a file called logger.txt
+wstream.write('Log file\n');
+//wstream.end();
+var logger = require("./logs/logger.txt"); 
+
+//my gearhost MYSQL db credentials to create a connection.
+//using https://codeburst.io/how-to-easily-set-up-node-environment-variables-in-your-js-application-d06740f9b9bd
+//to create a gitignore to secure my DB credentials which are environment variables
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
+
+db.connect(function (err){
+ if(!err){
+  console.log("DB connected");
+  wstream.write('\nConnected to gearhost DB...');
+ }else{
+  console.log("Error in connecting DB");
+  wstream.write('\nerror connecting to gearhost db');
+ }
+});
+
+
 
 // This function calls the index view when somebody goes to the site - routes.
 app.get('/', function(req, res) {

@@ -1,0 +1,3 @@
+Log file
+
+Connected to gearhost DB...

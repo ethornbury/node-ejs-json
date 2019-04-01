@@ -25,6 +25,8 @@ To set up the environment
 	$ npm install mysql --save
 	
 	$ npm install multer
+	
+	$ npm install dotenv --save //global environment variables
     
     
 I set a free mysql database in [Gearhost](http://gearhost.com) and the project links to it.

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include partials/header %>
+    </head>
+    <body>
+          <div class="w3-container l3 w3-text-grey w3-padding" >
+            <% include partials/nav %>
+                <div class="w3-row ">
+                    <div class="w3-col l1">
+                        <p></p>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Product List</h2>
+                        <% if (products.length > 0) { %>
+                            <% products.forEach(function(product) { %>
+                                <div class ="w3-panel w3-border w3-hover-border-teal">
+                                    <br />
+                                    <%= product.id %> : <%= product.name %> - &euro;<%= product.cost %> &ensp; &ensp;<a href="/item/<%= product.id %>" class="w3-button w3-teal">view item</a>
+                                    <br /><br />
+                                </div>
+                            <% }); %>
+                        <% } else{ %>
+                        
+                        <p>nothing to see here</p>
+                        <% } %>
+                        
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>&nbsp;</h2>
+                    </div>
+                    <div class="w3-col l3">
+                         <h2>Add Item</h2>
+                        <br />
+                        <a href="/add-item" class="w3-button w3-teal">Add new Item</a>
+                    </div>
+                </div>
+            <% include partials/footer %>
+          </div>
+  </body>
+</html>
+  

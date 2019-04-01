@@ -61,13 +61,13 @@ app.get('/', function(req, res) {
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
  
-// ---- CRUD functions on products.json
+// ---- CRUD functions on SQL table
 
 // ---- create the table, only need to run the URL onetime manually
 // SQL create product table Example
 app.get('/create-products-table', function(req, res) {
   //let sql = 'DROP TABLE products_ejs IF EXISTS;'
-  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Image varchar(255), desc varchar(255));';
+  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Image varchar(255), Desc varchar(255));';
     let query = db.query(sql, (err, res) => {
       if(err) throw err;
        console.log(res);
@@ -76,35 +76,91 @@ app.get('/create-products-table', function(req, res) {
     res.send("Well done products table created...");
 });
 
+//--------------PRODUCT CRUD
+//taking data from a form in the views - post request
+app.post('/new-product', function(req, res) {
+  let sql = 'INSERT INTO products ( Name, Price, Image, Desc) VALUES ("'+req.body.name+'", "'+req.body.price+'", "'+req.body.image+'", "'+req.body.desc+'")';
+  let query = db.query(sql, (err, res) => {
+    if(err) throw err;
+    console.log(res);
+    wstream.write('\nnew product added ' + req.body.name + " " + new Date(Date.now()).toLocaleString());
+  });
+  //res.send("Well done, new product created...");
+  res.redirect('/products'); // redirect to product funtion so it will render the view with the row data 
+  console.log("Now you are on the products page!");
+});
+
+app.get('/products', function(req, res){
+ let sql = 'SELECT * FROM products';
+ let query = db.query(sql, (err, res1) => {
+    if(err) throw err;
+    res.render('/products', { res1, reviews, title: 'Products listing', messages: '   '});
+    
+    //res.send(res1); //shows table contents but needs style
+    console.log(res1);
+     wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
+  });
+  //console.log("Now you are on the products page! Session set as seen on products page " + req.session.email);
+  console.log("Now you are on the products page! ");
+});
+
+
+// function to render the individual products page {user: req.user,} 
+app.get('/item/:id', function(req, res){
+ // res.send("Hello cruel world!"); // This is commented out to allow the index view to be rendered
+ let sql = 'SELECT * FROM products WHERE Id = "'+req.params.id+'";';
+ global.product_id = req.params.id;
+ let query = db.query(sql, (err, res1) =>{
+  if(err) throw(err);
+  res.render('/item', { res1, title: 'Item view', messages: '   '}); // use the render command so that the response object renders a HHTML page
+  wstream.write('\nproduct listed ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
+ });
+ console.log("Now you are on the Individual product page!");
+});
+
+//edit a product
+app.get('/edit-product/:id', function(req, res){
+ let sql = 'SELECT * FROM products WHERE Id = "'+req.params.id+'";';
+ console.log(req.params.id);
+ let query = db.query(sql, (err, res1) =>{
+  if(err) throw(err);
+  wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
+  res.render('/edit-product', {res1, title: 'Edit product', messages: '   '});// use the render command so that the response object renders a HHTML page
+ });
+ console.log("Now you are on the edit product page!");
+});
+
+
+// ---- CRUD on products.json
 // ---- view all products
-app.get('/products', function(req, res) {
-  res.render("products", {products:products});
+app.get('/o-products', function(req, res) {
+  res.render("o-products", {products:products});
   console.log("Product page now rendered");    // the log function is used to output data to the terminal. 
 });
 
 // ---- view one product
-app.get('/item/:id', function(req, res) {
+app.get('/o-item/:id', function(req, res) {
   var json = JSON.stringify(products);
   var keyToFind = parseInt(req.params.id); // call name from the url
   var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
   console.log(req.params.id);
   //parse json info then select the item with correct id 
-  res.render("item", {products: products, p: index});
+  res.render("o-item", {products: products, p: index});
   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
 });
 
 // ---- delete one product - how not to do it!
 // unreliable as not specific enough and may delete the wrong product
-app.delete('delete-item-0/:id', function(req, res) {
+app.delete('o-delete-item-0/:id', function(req, res) {
  //var deleteCustomer = products["product" + req.params.id];
   var p = req.params.id;
     delete products[p];
     console.log("deleted ", p);
-    res.render("products", {products:products});
+    res.render("o-products", {products:products});
 });
 
 // ---- delete one product
-app.get('/delete-item/:id', function(req, res) {
+app.get('/o-delete-item/:id', function(req, res) {
   var json = JSON.stringify(products);
   var keyToFind = parseInt(req.params.id); // get id from the url
     var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
@@ -113,17 +169,17 @@ app.get('/delete-item/:id', function(req, res) {
     fs.writeFile('./models/products.json', json, 'utf8'); // Writing the data back to the file
     console.log("Product Deleted");
   
-  res.redirect("/products");
+  res.redirect("/o-products");
 });
 
 // ---- create a product, renders page with form
-app.get("/add-item", function(req, res){
-    res.render("add-item.ejs");
+app.get("/o-add-item", function(req, res){
+    res.render("o-add-item.ejs");
     console.log("on the add item page!")
 });
 
 // ---- create a product function
-app.post("/add-item", function(req, res){
+app.post("/o-add-item", function(req, res){
     // function to find the max id
   	function getMaxProduct(products , id) {
   		var productMax
@@ -156,7 +212,7 @@ app.post("/add-item", function(req, res){
       fs.writeFile('./models/products.json', pjson, 'utf8')
     }
   })
-  res.redirect("/products");
+  res.redirect("/o-products");
   console.log("Item added and back to products list"); 
 });
 

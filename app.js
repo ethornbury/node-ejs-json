@@ -62,6 +62,20 @@ app.get('/', function(req, res) {
 });
  
 // ---- CRUD functions on products.json
+
+// ---- create the table, only need to run the URL onetime manually
+// SQL create product table Example
+app.get('/create-products-table', function(req, res) {
+  //let sql = 'DROP TABLE products_ejs IF EXISTS;'
+  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Image varchar(255), desc varchar(255));';
+    let query = db.query(sql, (err, res) => {
+      if(err) throw err;
+       console.log(res);
+      });
+    wstream.write('\nproduct table created on the db');
+    res.send("Well done products table created...");
+});
+
 // ---- view all products
 app.get('/products', function(req, res) {
   res.render("products", {products:products});

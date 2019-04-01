@@ -1,3 +1,4 @@
 Log file
 
 Connected to gearhost DB...
+product table created on the db

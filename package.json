@@ -1,18 +1,26 @@
 {
-  "name": "myapp",
+  "name": "node-ejs-json",
   "version": "1.0.0",
   "description": "This was done in a [Cloud9](https://c9.io/login) Node workspace",
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "mysql": "^2.16.0",
     "node.date-time": "^1.2.2"
-    
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "EThornbury",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethornbury/node-ejs-json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ethornbury/node-ejs-json/issues"
+  },
+  "homepage": "https://github.com/ethornbury/node-ejs-json#readme"
 }

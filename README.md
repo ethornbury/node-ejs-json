@@ -1,4 +1,4 @@
-# node-exmple
+npm# node-exmple
 
 This was done in a [Cloud9](https://c9.io/login) Node workspace
 
@@ -22,7 +22,9 @@ To set up the environment
 	
 	$ npm install formidable //file uploader
 	
-	$npm install mysql
+	$ npm install mysql --save
+	
+	$ npm install multer
     
     
 I set a free mysql database in [Gearhost](http://gearhost.com) and the project links to it.

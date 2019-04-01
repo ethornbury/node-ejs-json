@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include partials/header %>
+    </head>
+    <body>
+          <div class="w3-container l3 w3-text-grey w3-padding" >
+            <% include partials/nav %>
+               
+                <div class="w3-row w3-grayscale">
+                    <div class="w3-col l1">
+                        <p></p>
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>Images</h2>
+                            <% products.forEach(function(image) { %>
+                               <%=  %> 
+                            <% }); %>
+
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>&nbsp;</h2>
+                       
+                    </div>
+                    <div class="w3-col l3">
+                        <h2>&nbsp;</h2>
+                    </div>
+                </div>
+            <% include partials/footer %>
+          </div>
+  </body>
+</html>
+  

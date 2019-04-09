@@ -38,7 +38,8 @@ const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    multipleStatements: true //this allows for multiple sql statements in 1 function
 });
 
 
@@ -62,12 +63,11 @@ app.get('/', function(req, res) {
 });
  
 // ---- CRUD functions on SQL table
-
 // ---- create the table, only need to run the URL onetime manually
 // SQL create product table Example
 app.get('/create-products-table', function(req, res) {
   //let sql = 'DROP TABLE products_ejs IF EXISTS;'
-  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Image varchar(255), Desc varchar(255));';
+  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Descript varchar(255), Image varchar(255));';
     let query = db.query(sql, (err, res) => {
       if(err) throw err;
        console.log(res);
@@ -77,9 +77,13 @@ app.get('/create-products-table', function(req, res) {
 });
 
 //--------------PRODUCT CRUD
+app.get('/add-item', function(req, res) {
+  res.render('add-item.ejs');
+  console.log("add-item page now rendered");    // the log function is used to output data to the terminal. 
+});
 //taking data from a form in the views - post request
-app.post('/new-product', function(req, res) {
-  let sql = 'INSERT INTO products ( Name, Price, Image, Desc) VALUES ("'+req.body.name+'", "'+req.body.price+'", "'+req.body.image+'", "'+req.body.desc+'")';
+app.post('/add-item', function(req, res) {
+  let sql = 'INSERT INTO products_ejs ( Name, Price, Descript, Image) VALUES ("'+req.body.name+'", '+req.body.price+', "'+req.body.descript+'",  "'+req.body.image+'")';
   let query = db.query(sql, (err, res) => {
     if(err) throw err;
     console.log(res);
@@ -90,44 +94,86 @@ app.post('/new-product', function(req, res) {
   console.log("Now you are on the products page!");
 });
 
+
 app.get('/products', function(req, res){
- let sql = 'SELECT * FROM products';
- let query = db.query(sql, (err, res1) => {
-    if(err) throw err;
-    res.render('/products', { res1, reviews, title: 'Products listing', messages: '   '});
+     
+//  db.query('SELECT * FROM products_ejs; SELECT * FROM users', [1, 2], function(err, results) {
+//   if (err) throw err;
+//   // `results` is an array with one element for every statement in the query:
+//   console.log(results[0]); // [{1: 1}]
+//   console.log(results[1]); // [{2: 2}]
+//   res1 = results[0];
+//   res2 = results[1];
+//   res.render('characterssql', {res1, res2});
     
-    //res.send(res1); //shows table contents but needs style
-    console.log(res1);
-     wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
-  });
-  //console.log("Now you are on the products page! Session set as seen on products page " + req.session.email);
-  console.log("Now you are on the products page! ");
-});
+    db.query('SELECT * FROM products_ejs; SELECT * FROM users', [1, 2], function(err, results){
+    if (err) throw err;
+   // `results` is an array with one element for every statement in the query:
+   console.log(results[0]); // [{1: 1}]
+   console.log(results[1]); // [{2: 2}]
+   res1 = results[0];
+   res2 = results[1];
+   res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: '   '});
+   wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
+    });
+    console.log("Now you are on the products page! ");
+});  
+//  let sql = 'SELECT * FROM products_ejs';
+ 
+//  let query = db.query(sql, (err, res1) => {
+//     if(err) throw err;
+//     res.render('products.ejs', { res1, reviews, title: 'Products listing', messages: '   '});
+    
+//     //res.send(res1); //shows table contents but needs style
+//     console.log(res1);
+//      wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
+//   });
+//   //console.log("Now you are on the products page! Session set as seen on products page " + req.session.email);
+//   console.log("Now you are on the products page! ");
+// });
+
+
+
 
 
 // function to render the individual products page {user: req.user,} 
 app.get('/item/:id', function(req, res){
  // res.send("Hello cruel world!"); // This is commented out to allow the index view to be rendered
- let sql = 'SELECT * FROM products WHERE Id = "'+req.params.id+'";';
- global.product_id = req.params.id;
+ let sql = 'SELECT * FROM products_ejs WHERE Id = "'+req.params.id+'";';
+ console.log(req.params.id);
+ //global.product_id = req.params.id;
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
-  res.render('/item', { res1, title: 'Item view', messages: '   '}); // use the render command so that the response object renders a HHTML page
+  res.render('item.ejs', { res1, title: 'Item view', messages: '   '}); // use the render command so that the response object renders a HHTML page
   wstream.write('\nproduct listed ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
  });
  console.log("Now you are on the Individual product page!");
 });
 
 //edit a product
-app.get('/edit-product/:id', function(req, res){
- let sql = 'SELECT * FROM products WHERE Id = "'+req.params.id+'";';
+app.get('/product-update/:id', function(req, res){
+ let sql = 'SELECT * FROM products_ejs WHERE Id = "'+req.params.id+'";';
+ //let sql = 'UPDATE liammc SET Name = "'+req.body.name+'", Price = '+req.body.price+', Image = "'+req.body.image+'", Activity = "'+req.body.activity+'" WHERE Id = "'+req.params.id+'";';
  console.log(req.params.id);
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
   wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
-  res.render('/edit-product', {res1, title: 'Edit product', messages: '   '});// use the render command so that the response object renders a HHTML page
+  res.render('product-update.ejs', {res1, title: 'Edit product', messages: '   '});// use the render command so that the response object renders a HHTML page
  });
  console.log("Now you are on the edit product page!");
+});
+
+//edit a product
+app.post('/product-update/:id', function(req, res){
+ //let sql = 'SELECT * FROM products_ejs WHERE Id = "'+req.params.id+'";';
+ let sql = 'UPDATE products_ejs SET Name = "'+req.body.name+'", Price = '+req.body.price+', Image = "'+req.body.image+'", Descript = "'+req.body.descript+'" WHERE Id = "'+req.params.id+'";';
+ console.log(req.params.id);
+ let query = db.query(sql, (err, res1) =>{
+  if(err) throw(err);
+  wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
+  res.redirect('/products', {title: 'Products', messages: '   '});// use the render command so that the response object renders a HHTML page
+ });
+ console.log("Now you are on the products page!");
 });
 
 

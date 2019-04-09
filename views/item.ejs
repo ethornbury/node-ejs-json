@@ -11,35 +11,28 @@
                     <p></p>
                 </div>
                 <div class="w3-col l3">
-                    <h2>Product List</h2>
-                    <% res1.forEach(function(product) { %>
+                    <h2>Item Listing</h2>
+                    <%// res1.forEach(function(product) { %>
            
-                      <div class="w3-panel w3-border w3-hover-border-teal">
+                      <div class="item">
                          <p>Id: <%= product.Id %></p>
                          <p>Name: <%= product.Name %> </p>
-                         <p>Description: <%= product.Descript %> </p>
+                         <p>Description: <%= product.Descrip %> </p>
                          <p>Price: &euro;<%= product.Price %> </p>
                          
                          <a href="/product-update/<%= product.Id %>" class="w3-button w3-teal">Update </a> &nbsp;
                          <a href="/product-delete/<%= product.Id %>" class="w3-button w3-teal">Delete </a> &nbsp;
                          <a href="/item/<%= product.Id %>" class="w3-button w3-teal">View </a>
-                         <br /><br />
                        </div>
-                    <% }); %> 
+                    <%// }); %> 
                 </div>
                 <div class="w3-col l3">
                     <h2>&nbsp;</h2>
                 </div>
                 <div class="w3-col l3">
-                    <h2>Add Item</h2> <a href="/add-item" class="w3-button w3-teal">Add new Item</a>
-                    
-                    <% res2.forEach(function(users) { %>
-                      <div class="w3-panel w3-border w3-hover-border-teal">
-                        <p>Name: <%= users.Fname %> <%= users.Lname %></p>
-                        <p>Email: <%= users.Email %> </p>
-                       </div>
-                    <% }); %> 
-                    
+                     <h2>Add Item</h2>
+                    <br />
+                    <a href="/add-item" class="w3-button w3-teal">Add new Item</a>
                 </div>
             </div>
         <% include partials/footer %>

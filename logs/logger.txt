@@ -1,4 +1,11 @@
 Log file
 
 Connected to gearhost DB...
-product table created on the db
+all product listing and JSON reviews display4/9/2019, 6:13:38 PM
+all product listing and JSON reviews display4/9/2019, 6:14:07 PM
+all product listing and JSON reviews display4/9/2019, 6:14:34 PM
+all product listing and JSON reviews display4/9/2019, 6:14:43 PM
+all product listing and JSON reviews display4/9/2019, 6:15:00 PM
+all product listing and JSON reviews display4/9/2019, 6:15:13 PM
+all product listing and JSON reviews display4/9/2019, 6:15:47 PM
+all product listing and JSON reviews display4/9/2019, 6:15:59 PM

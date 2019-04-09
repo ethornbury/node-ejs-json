@@ -96,45 +96,18 @@ app.post('/add-item', function(req, res) {
 
 
 app.get('/products', function(req, res){
-     
-//  db.query('SELECT * FROM products_ejs; SELECT * FROM users', [1, 2], function(err, results) {
-//   if (err) throw err;
-//   // `results` is an array with one element for every statement in the query:
-//   console.log(results[0]); // [{1: 1}]
-//   console.log(results[1]); // [{2: 2}]
-//   res1 = results[0];
-//   res2 = results[1];
-//   res.render('characterssql', {res1, res2});
-    
     db.query('SELECT * FROM products_ejs; SELECT * FROM users', [1, 2], function(err, results){
-    if (err) throw err;
-   // `results` is an array with one element for every statement in the query:
-   console.log(results[0]); // [{1: 1}]
-   console.log(results[1]); // [{2: 2}]
-   res1 = results[0];
-   res2 = results[1];
-   res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: '   '});
-   wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
+        if (err) throw err;
+        // `results` is an array with one element for every statement in the query:
+        console.log(results[0]); // [{1: 1}]
+        console.log(results[1]); // [{2: 2}]
+        var res1 = results[0];
+        var res2 = results[1];
+        res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: '   '});
+        wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
     });
     console.log("Now you are on the products page! ");
 });  
-//  let sql = 'SELECT * FROM products_ejs';
- 
-//  let query = db.query(sql, (err, res1) => {
-//     if(err) throw err;
-//     res.render('products.ejs', { res1, reviews, title: 'Products listing', messages: '   '});
-    
-//     //res.send(res1); //shows table contents but needs style
-//     console.log(res1);
-//      wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
-//   });
-//   //console.log("Now you are on the products page! Session set as seen on products page " + req.session.email);
-//   console.log("Now you are on the products page! ");
-// });
-
-
-
-
 
 // function to render the individual products page {user: req.user,} 
 app.get('/item/:id', function(req, res){

@@ -58,7 +58,7 @@ db.connect(function (err){
 // This function calls the index view when somebody goes to the site - routes.
 app.get('/', function(req, res) {
   // renders the index page showing products, reviews annd contacts from json files
-  res.render("index", {products:products, reviews:reviews, contacts:contacts});
+  res.render("index", {products:products, reviews:reviews, contacts:contacts, messages: ''});
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
  
@@ -78,7 +78,7 @@ app.get('/create-products-table', function(req, res) {
 
 //--------------PRODUCT CRUD
 app.get('/add-item', function(req, res) {
-  res.render('add-item.ejs');
+  res.render('add-item.ejs', {messages: ''});
   console.log("add-item page now rendered");    // the log function is used to output data to the terminal. 
 });
 //taking data from a form in the views - post request
@@ -90,7 +90,7 @@ app.post('/add-item', function(req, res) {
     wstream.write('\nnew product added ' + req.body.name + " " + new Date(Date.now()).toLocaleString());
   });
   //res.send("Well done, new product created...");
-  res.redirect('/products'); // redirect to product funtion so it will render the view with the row data 
+  res.redirect('/products', {messages: 'new product created'}); // redirect to product funtion so it will render the view with the row data 
   console.log("Now you are on the products page!");
 });
 
@@ -103,7 +103,7 @@ app.get('/products', function(req, res){
         console.log(results[1]); // [{2: 2}]
         var res1 = results[0];
         var res2 = results[1];
-        res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: '   '});
+        res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: ''});
         wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
     });
     console.log("Now you are on the products page! ");
@@ -113,11 +113,11 @@ app.get('/products', function(req, res){
 app.get('/item/:id', function(req, res){
  // res.send("Hello cruel world!"); // This is commented out to allow the index view to be rendered
  let sql = 'SELECT * FROM products_ejs WHERE Id = "'+req.params.id+'";';
- console.log(req.params.id);
+ console.log("id: ", req.params.id);
  //global.product_id = req.params.id;
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
-  res.render('item.ejs', { res1, title: 'Item view', messages: '   '}); // use the render command so that the response object renders a HHTML page
+  res.render('item.ejs', { res1, title: 'Item view', messages: ''}); // use the render command so that the response object renders a HHTML page
   wstream.write('\nproduct listed ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
  });
  console.log("Now you are on the Individual product page!");
@@ -131,7 +131,7 @@ app.get('/product-update/:id', function(req, res){
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
   wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
-  res.render('product-update.ejs', {res1, title: 'Edit product', messages: '   '});// use the render command so that the response object renders a HHTML page
+  res.render('product-update.ejs', {res1, title: 'Edit product', messages: ''});// use the render command so that the response object renders a HHTML page
  });
  console.log("Now you are on the edit product page!");
 });
@@ -144,7 +144,7 @@ app.post('/product-update/:id', function(req, res){
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
   wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
-  res.redirect('/products', {title: 'Products', messages: '   '});// use the render command so that the response object renders a HHTML page
+  res.redirect('/products', {title: 'Products', messages: 'product updated'});// use the render command so that the response object renders a HHTML page
  });
  console.log("Now you are on the products page!");
 });
@@ -152,99 +152,99 @@ app.post('/product-update/:id', function(req, res){
 
 // ---- CRUD on products.json
 // ---- view all products
-app.get('/o-products', function(req, res) {
-  res.render("o-products", {products:products});
-  console.log("Product page now rendered");    // the log function is used to output data to the terminal. 
-});
+// app.get('/o-products', function(req, res) {
+//   res.render("o-products", {products:products, messages: ''});
+//   console.log("Product page now rendered");    // the log function is used to output data to the terminal. 
+// });
 
 // ---- view one product
-app.get('/o-item/:id', function(req, res) {
-  var json = JSON.stringify(products);
-  var keyToFind = parseInt(req.params.id); // call name from the url
-  var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
-  console.log(req.params.id);
-  //parse json info then select the item with correct id 
-  res.render("o-item", {products: products, p: index});
-  console.log("item page now rendered");    // the log function is used to output data to the terminal. 
-});
+// app.get('/o-item/:id', function(req, res) {
+//   var json = JSON.stringify(products);
+//   var keyToFind = parseInt(req.params.id); // call name from the url
+//   var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
+//   console.log(req.params.id);
+//   //parse json info then select the item with correct id 
+//   res.render("o-item", {products: products, p: index, messages: ''});
+//   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
+// });
 
 // ---- delete one product - how not to do it!
 // unreliable as not specific enough and may delete the wrong product
-app.delete('o-delete-item-0/:id', function(req, res) {
- //var deleteCustomer = products["product" + req.params.id];
-  var p = req.params.id;
-    delete products[p];
-    console.log("deleted ", p);
-    res.render("o-products", {products:products});
-});
+// app.delete('o-delete-item-0/:id', function(req, res) {
+//  //var deleteCustomer = products["product" + req.params.id];
+//   var p = req.params.id;
+//     delete products[p];
+//     console.log("deleted ", p);
+//     res.render("o-products", {products:products, messages: ''});
+// });
 
 // ---- delete one product
-app.get('/o-delete-item/:id', function(req, res) {
-  var json = JSON.stringify(products);
-  var keyToFind = parseInt(req.params.id); // get id from the url
-    var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
-    products.splice(index ,1); // deletes one item from position represented by index  (its position) from above
-    json = JSON.stringify(products, null, 4); //turns it back to json
-    fs.writeFile('./models/products.json', json, 'utf8'); // Writing the data back to the file
-    console.log("Product Deleted");
+// app.get('/o-delete-item/:id', function(req, res) {
+//   var json = JSON.stringify(products);
+//   var keyToFind = parseInt(req.params.id); // get id from the url
+//     var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
+//     products.splice(index ,1); // deletes one item from position represented by index  (its position) from above
+//     json = JSON.stringify(products, null, 4); //turns it back to json
+//     fs.writeFile('./models/products.json', json, 'utf8'); // Writing the data back to the file
+//     console.log("Product Deleted");
   
-  res.redirect("/o-products");
-});
+//   res.redirect("/o-products", {messages: ''});
+// });
 
 // ---- create a product, renders page with form
-app.get("/o-add-item", function(req, res){
-    res.render("o-add-item.ejs");
-    console.log("on the add item page!")
-});
+// app.get("/o-add-item", function(req, res){
+//     res.render("o-add-item.ejs", {messages: ''});
+//     console.log("on the add item page!")
+// });
 
 // ---- create a product function
-app.post("/o-add-item", function(req, res){
-    // function to find the max id
-  	function getMaxProduct(products , id) {
-  		var productMax
-  		for (var i=0; i< products.length; i++) {
-  			if(!productMax || parseInt(products[i][id]) > parseInt(productMax[id]))
-  				productMax = products[i];
-    		}
-  		return productMax;
-  	}
-	var maxPID = getMaxProduct(products, "id"); // This calls the function above and passes the result as a variable called maxPID.
-	var newProductID = maxPID.id + 1;  // this creates a new variable called newProductID which is the maxPID + 1
-	console.log( newProductID); // We console log the new id for show reasons only
+// app.post("/o-add-item", function(req, res){
+//     // function to find the max id
+//   	function getMaxProduct(products , id) {
+//   		var productMax
+//   		for (var i=0; i< products.length; i++) {
+//   			if(!productMax || parseInt(products[i][id]) > parseInt(productMax[id]))
+//   				productMax = products[i];
+//     		}
+//   		return productMax;
+//   	}
+// 	var maxPID = getMaxProduct(products, "id"); // This calls the function above and passes the result as a variable called maxPID.
+// 	var newProductID = maxPID.id + 1;  // this creates a new variable called newProductID which is the maxPID + 1
+// 	console.log( newProductID); // We console log the new id for show reasons only
     
-	// create a new product based on what we have in our form on the add page 
-	var newProductInfo = {
-    name: req.body.name,  //data from form
-    id:  newProductID,    //data from function
-    cost: req.body.cost,  //data from form
-  };
-  console.log(newProductInfo);
-  var pjson = JSON.stringify(products); // Convert our json data to a string
+// 	// create a new product based on what we have in our form on the add page 
+// 	var newProductInfo = {
+//     name: req.body.name,  //data from form
+//     id:  newProductID,    //data from function
+//     cost: req.body.cost,  //data from form
+//   };
+//   console.log(newProductInfo);
+//   var pjson = JSON.stringify(products); // Convert our json data to a string
   
-  // The following function reads the new data and pushes it into our JSON file
-  fs.readFile('./models/products.json', 'utf8', function readFileCallback(err, data){
-    if(err){
-     throw(err);
-    } else {
-      products.push(newProductInfo); // add the data to the json file based on the declared variable above
-      pjson = JSON.stringify(products, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
-      fs.writeFile('./models/products.json', pjson, 'utf8')
-    }
-  })
-  res.redirect("/o-products");
-  console.log("Item added and back to products list"); 
-});
+//   // The following function reads the new data and pushes it into our JSON file
+//   fs.readFile('./models/products.json', 'utf8', function readFileCallback(err, data){
+//     if(err){
+//      throw(err);
+//     } else {
+//       products.push(newProductInfo); // add the data to the json file based on the declared variable above
+//       pjson = JSON.stringify(products, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
+//       fs.writeFile('./models/products.json', pjson, 'utf8')
+//     }
+//   })
+//   res.redirect("/o-products", {messages: 'item added'});
+//   console.log("Item added and back to products list"); 
+// });
 
 
 // ---- view all contacts in a list 
 app.get("/contacts", function(req, res){
-    res.render("contacts.ejs", {contacts: contacts});
+    res.render("contacts.ejs", {contacts: contacts, messages: ''});
     console.log("on contacts page!")
 });
 
 // ---- add contact page rendered 
 app.get("/add-contact", function(req, res){
-    res.render("add-contact.ejs");
+    res.render("add-contact.ejs", {messages: ''});
     console.log("on add contact page!")
 });
 
@@ -284,7 +284,8 @@ app.post("/add-contact", function(req, res){
       fs.writeFile('./models/contacts.json', json, 'utf8')
     }
   })
-  res.redirect("/contacts");
+  res.render('contacts.ejs', {contacts: contacts, messages: 'contact added'});
+  //res.redirect('/contacts', {messages: 'contact added'});
   console.log("Add-contact page rendered and contact added"); 
 });
 
@@ -296,7 +297,7 @@ app.get('/edit-contact/:name', function(req, res){
   }
 	
  	var indOne = contacts.filter(chooseContact);
-	res.render("edit-contact",{indOne:indOne});
+	res.render("edit-contact",{indOne:indOne, messages: ''});
  	console.log(indOne);
 });
 
@@ -318,19 +319,19 @@ app.post('/edit-contact/:name', function(req, res){
 	json = JSON.stringify(contacts, null, 4);
 	fs.writeFile('./models/contacts.json', json, 'utf8'); // Writing the data back to the file
   console.log(w, x, y, z, index);
-  res.redirect("/contacts");
+  res.render('contacts.ejs', {contacts: contacts, messages: 'contact updated'});
 });
 
 
 
 // ---- read all users
 app.get('/users', function(req, res){
-    res.render("users", {users:users});
+    res.render("users", {users:users, messages: ''});
     console.log("User page now rendered");
 });
 
 app.get('/about', function(req, res) {
-	res.render('about');
+	res.render('about', {messages: ''});
 	console.log("about page now rendered");
 });
 
@@ -375,7 +376,7 @@ const multerConfig = {
 
 // ---- file upload page rendered
 app.get('/upload', function(req, res) {
-	res.render('upload');
+	res.render('upload', {messages: ''});
 	console.log("upload page now rendered");
 });
 
@@ -400,7 +401,7 @@ app.post('/upload', function(req, res){
     if(err)
       return res.status(500).send(err);
     console.log("Image is " + req.files.sampleFile) //file uploading though this empty object
-    res.redirect('/');
+    res.render('index.ejs', {products:products, reviews:reviews, contacts:contacts, messages: 'uploaded'});
   });
 });
 //file upload end ------------- 
@@ -410,7 +411,7 @@ app.post('/search', function(req, res){
   let sql = 'SELECT * FROM products_ejs WHERE Name LIKE "%'+req.body.search+'%" ';
   let query = db.query(sql, (err,res1) => {
     if(err) throw err;
-    res.render('products.ejs', {res1});
+    res.render('products.ejs', {res1, messages: ''});
     console.log("search ", res1);
   });
 });

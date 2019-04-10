@@ -372,6 +372,17 @@ const multerConfig = {
         }
     }
 };
+
+// ---- search function
+app.post('/search', function(req, res){
+  let sql = 'SELECT * FROM products_ejs WHERE Name LIKE "%'+req.body.search+'%" ';
+  let query = db.query(sql, (err,res1) => {
+    if(err) throw err;
+    res.render('products.ejs', {res1});
+    console.log("search ", res1);
+  });
+});
+
   
 // ---- file upload page rendered
 app.get('/upload', function(req, res) {

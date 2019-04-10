@@ -32,14 +32,17 @@
                 </div>
                 <div class="w3-col l3">
                     <h2>Add Item</h2> <a href="/add-item" class="w3-button w3-teal">Add new Item</a>
-                    
-                    <% res2.forEach(function(users) { %>
-                      <div class="w3-panel w3-border w3-hover-border-teal">
-                        <p>Name: <%= users.Fname %> <%= users.Lname %></p>
-                        <p>Email: <%= users.Email %> </p>
-                       </div>
-                    <% }); %> 
-                    
+                    <%// if (users.length > 0) { %>
+                    <% if (undefined) { %>]
+                        <% res2.forEach(function(users) { %>
+                          <div class="w3-panel w3-border w3-hover-border-teal">
+                            <p>Name: <%= users.Fname %> <%= users.Lname %></p>
+                            <p>Email: <%= users.Email %> </p>
+                           </div>
+                        <% }); %> 
+                    <% } else{ %>
+                        <p>nothing to see here</p>
+                    <% } %>
                 </div>
             </div>
         <% include partials/footer %>

@@ -4,9 +4,9 @@ This was done in a [Cloud9](https://c9.io/login) Node workspace
 
 To set up the environment
     
-    $npm install
+    $ npm install
     
-    mkdir myapp
+    $ mkdir myapp
 	
 	$ cd myapp
 	
@@ -27,6 +27,8 @@ To set up the environment
 	$ npm install multer
 	
 	$ npm install dotenv --save //global environment variables
+	
+	$ npm install --save express-fileupload
     
     
 I set a free mysql database in [Gearhost](http://gearhost.com) and the project links to it.

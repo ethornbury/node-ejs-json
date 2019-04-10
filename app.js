@@ -373,6 +373,38 @@ const multerConfig = {
     }
 };
 
+// ---- file upload page rendered
+app.get('/upload', function(req, res) {
+	res.render('upload');
+	console.log("upload page now rendered");
+});
+
+// ---- file upload function using multerConfig from above
+// app.post('/upload',multer(multerConfig).single('photo'),function(req,res){
+//   res.render("index", {products:products, reviews:reviews, users:users});
+//   //res.send('Complete!');
+// });
+
+// liam upload
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
+app.post('/upload', function(req, res){
+  //  need to get the file from the form
+  let sampleFile = req.files.sampleFile
+  console.log("samplefile", sampleFile); //check we have correct details
+  var filename = sampleFile.name;
+  console.log("filename ", filename);  //check we have correct details
+  // we use the middleware (file upload ) to move the data from the form to the desired location
+  sampleFile.mv('./images/' + filename, function(err){
+    if(err)
+      return res.status(500).send(err);
+    console.log("Image is " + req.files.sampleFile) //file uploading though this empty object
+    res.redirect('/');
+  });
+});
+//file upload end ------------- 
+
 // ---- search function
 app.post('/search', function(req, res){
   let sql = 'SELECT * FROM products_ejs WHERE Name LIKE "%'+req.body.search+'%" ';
@@ -382,21 +414,6 @@ app.post('/search', function(req, res){
     console.log("search ", res1);
   });
 });
-
-  
-// ---- file upload page rendered
-app.get('/upload', function(req, res) {
-	res.render('upload');
-	console.log("upload page now rendered");
-});
-
-// ---- file upload function using multerConfig from above
-app.post('/upload',multer(multerConfig).single('photo'),function(req,res){
-  res.render("index", {products:products, reviews:reviews, users:users});
-  //res.send('Complete!');
-});
-
-//file upload end ------------- 
 
 // ---- This function gets the application up and running on the development server.
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){

@@ -1,3 +1,4 @@
 Log file
 
 Connected to gearhost DB...
+all product listing and JSON reviews display4/10/2019, 7:50:03 PM

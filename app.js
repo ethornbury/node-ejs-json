@@ -1,8 +1,10 @@
 /**
  * create products, search functionailty, 
  */
+
 var express = require("express");
 var app = express();
+
 app.use(express.static("views"));       // Allow access to content of views folder
 app.use(express.static("scripts"));     // Allow access to scripts folder
 app.use(express.static("images"));      // Allow access to images folder
@@ -12,7 +14,7 @@ require('dotenv').config(); //for creating environment variables in the .env fil
 
 var mysql       = require('mysql');
 var http        = require('http');
-var bodyParser  = require("body-parser");
+var bodyParser  = require("body-parser"); //allows req.body.id etc
 const multer    = require('multer'); // file storing middleware
 //var formidable = require('formidable');
 var fs          = require('fs');
@@ -89,8 +91,7 @@ app.post('/add-item', function(req, res) {
     console.log(res);
     wstream.write('\nnew product added ' + req.body.name + " " + new Date(Date.now()).toLocaleString());
   });
-  //res.send("Well done, new product created...");
-  res.redirect('/products', {messages: 'new product created'}); // redirect to product funtion so it will render the view with the row data 
+  res.redirect('/products',202 ,  {messages: 'new product created'}); // redirect to product funtion so it will render the view with the row data 
   console.log("Now you are on the products page!");
 });
 
@@ -144,7 +145,7 @@ app.post('/product-update/:id', function(req, res){
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
   wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
-  res.redirect('/products', {title: 'Products', messages: 'product updated'});// use the render command so that the response object renders a HHTML page
+  res.redirect('/products', 202, {title: 'Products', messages: 'product updated'});// use the render command so that the response object renders a HHTML page
  });
  console.log("Now you are on the products page!");
 });
@@ -284,8 +285,8 @@ app.post("/add-contact", function(req, res){
       fs.writeFile('./models/contacts.json', json, 'utf8')
     }
   })
-  res.render('contacts.ejs', {contacts: contacts, messages: 'contact added'});
-  //res.redirect('/contacts', {messages: 'contact added'});
+  //res.render('contacts.ejs', {contacts: contacts, messages: 'contact added'});
+  res.redirect('/contacts', 202, {messages: 'contact added'});
   console.log("Add-contact page rendered and contact added"); 
 });
 
@@ -297,7 +298,7 @@ app.get('/edit-contact/:name', function(req, res){
   }
 	
  	var indOne = contacts.filter(chooseContact);
-	res.render("edit-contact",{indOne:indOne, messages: ''});
+	res.render("edit-contact.ejs", {indOne:indOne, messages: ''});
  	console.log(indOne);
 });
 
@@ -319,7 +320,8 @@ app.post('/edit-contact/:name', function(req, res){
 	json = JSON.stringify(contacts, null, 4);
 	fs.writeFile('./models/contacts.json', json, 'utf8'); // Writing the data back to the file
   console.log(w, x, y, z, index);
-  res.render('contacts.ejs', {contacts: contacts, messages: 'contact updated'});
+  //res.render('contacts.ejs', {contacts: contacts, messages: 'contact updated'});
+  res.redirect('/contacts', 202, {contacts: contacts, messages: 'contact updated'})
 });
 
 
@@ -401,7 +403,8 @@ app.post('/upload', function(req, res){
     if(err)
       return res.status(500).send(err);
     console.log("Image is " + req.files.sampleFile) //file uploading though this empty object
-    res.render('index.ejs', {products:products, reviews:reviews, contacts:contacts, messages: 'uploaded'});
+    //res.render('index.ejs', {products:products, reviews:reviews, contacts:contacts, messages: 'uploaded'});
+    res.redirect('/index', 202, {products:products, reviews:reviews, contacts:contacts, messages: 'uploaded'});
   });
 });
 //file upload end ------------- 

@@ -29,6 +29,14 @@ To set up the environment
 	$ npm install dotenv --save //global environment variables
 	
 	$ npm install --save express-fileupload
+	
+	$ npm install cookie-parser
+	
+	$ npm install cookieparser
+	
+	$ npm install connect-flash
+	
+	$ npm install express-session
     
     
 I set a free mysql database in [Gearhost](http://gearhost.com) and the project links to it.

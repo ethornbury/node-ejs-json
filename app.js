@@ -16,8 +16,8 @@ var mysql       = require('mysql');
 var http        = require('http');
 var bodyParser  = require("body-parser"); //allows req.body.id etc
 const multer    = require('multer'); // file storing middleware
-//var formidable = require('formidable');
 var fs          = require('fs');
+var flash = require('connect-flash');
 app.use(bodyParser.urlencoded({extended:false})); //handle body requests
 
 // allow the app to access the all the json files
@@ -32,7 +32,7 @@ var wstream = fs.createWriteStream('./logs/logger.txt');    //create a log of ac
 wstream.write('Log file\n');
 //wstream.end();
 var logger = require("./logs/logger.txt"); 
-
+ 
 //my gearhost MYSQL db credentials to create a connection.
 //using https://codeburst.io/how-to-easily-set-up-node-environment-variables-in-your-js-application-d06740f9b9bd
 //to create a gitignore to secure my DB credentials which are environment variables
@@ -44,7 +44,7 @@ const db = mysql.createConnection({
     multipleStatements: true //this allows for multiple sql statements in 1 function
 });
 
-
+//start my connection to my database
 db.connect(function (err){
  if(!err){
   console.log("DB connected");
@@ -60,22 +60,35 @@ db.connect(function (err){
 // This function calls the index view when somebody goes to the site - routes.
 app.get('/', function(req, res) {
   // renders the index page showing products, reviews annd contacts from json files
-  res.render("index", {products:products, reviews:reviews, contacts:contacts, messages: ''});
+  res.render("index", {products:products, reviews:reviews, contacts:contacts, message: 'Im back'});
   console.log("Home page now rendered");    // the log function is used to output data to the terminal. 
 });
  
 // ---- CRUD functions on SQL table
 // ---- create the table, only need to run the URL onetime manually
-// SQL create product table Example
 app.get('/create-products-table', function(req, res) {
-  //let sql = 'DROP TABLE products_ejs IF EXISTS;'
-  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Descript varchar(255), Image varchar(255));';
-    let query = db.query(sql, (err, res) => {
-      if(err) throw err;
-       console.log(res);
-      });
-    wstream.write('\nproduct table created on the db');
-    res.send("Well done products table created...");
+    db.query('DROP TABLE IF EXISTS products_ejs; SELECT * FROM users; CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Descript varchar(255), Image varchar(255));', [1, 2], function(err, results){
+        if (err) throw err;
+        // `results` is an array with one element for every statement in the query:
+        //console.log(results[0]); // [{1: 1}]
+        //console.log(results[1]); // [{2: 2}]
+        var res1 = results[0];
+        var res2 = results[1];
+        wstream.write('\ntable created products_ejs' + new Date(Date.now()).toLocaleString());
+        //res.send("Well done products table created...");
+        console.log("Well done products table created...");
+        res.redirect('/', 202, { message: 'Product_ejs table created'});
+    
+        //res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: ''});
+       // wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
+    });
+//  let sql = 'CREATE TABLE products_ejs ( Id int NOT NULL AUTO_INCREMENT PRIMARY KEY, Name varchar(255), Price decimal(5, 2), Descript varchar(255), Image varchar(255));';
+//     let query = db.query(sql, (err, res) => {
+//       if(err) throw err;
+//       console.log(res);
+//       });
+//     wstream.write('\nproduct table created on the db');
+//     res.send("Well done products table created...");
 });
 
 //--------------PRODUCT CRUD
@@ -104,7 +117,7 @@ app.get('/products', function(req, res){
         console.log(results[1]); // [{2: 2}]
         var res1 = results[0];
         var res2 = results[1];
-        res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', messages: ''});
+        res.render('products.ejs', {res1, res2, reviews, title: 'Products listing', message: ''});
         wstream.write('\nall product listing and JSON reviews display' + new Date(Date.now()).toLocaleString());
     });
     console.log("Now you are on the products page! ");
@@ -118,7 +131,7 @@ app.get('/item/:id', function(req, res){
  //global.product_id = req.params.id;
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
-  res.render('item.ejs', { res1, title: 'Item view', messages: ''}); // use the render command so that the response object renders a HHTML page
+  res.render('item.ejs', { res1, title: 'Item view', message: ''}); // use the render command so that the response object renders a HHTML page
   wstream.write('\nproduct listed ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
  });
  console.log("Now you are on the Individual product page!");
@@ -132,29 +145,48 @@ app.get('/product-update/:id', function(req, res){
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
   wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
-  res.render('product-update.ejs', {res1, title: 'Edit product', messages: ''});// use the render command so that the response object renders a HHTML page
+  res.render('product-update.ejs', {res1, title: 'Edit product', message: ''});// use the render command so that the response object renders a HHTML page
  });
  console.log("Now you are on the edit product page!");
 });
 
 //edit a product
 app.post('/product-update/:id', function(req, res){
- //let sql = 'SELECT * FROM products_ejs WHERE Id = "'+req.params.id+'";';
  let sql = 'UPDATE products_ejs SET Name = "'+req.body.name+'", Price = '+req.body.price+', Image = "'+req.body.image+'", Descript = "'+req.body.descript+'" WHERE Id = "'+req.params.id+'";';
  console.log(req.params.id);
  let query = db.query(sql, (err, res1) =>{
   if(err) throw(err);
   wstream.write('\nproduct edit page ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
-  res.redirect('/products', 202, {title: 'Products', messages: 'product updated'});// use the render command so that the response object renders a HHTML page
+  res.redirect('/products', 202, {title: 'Products', message: 'product updated'});// use the render command so that the response object renders a HHTML page
  });
  console.log("Now you are on the products page!");
 });
 
 
+// ---- delete one product
+// app.get('/delete-item/:id', function(req, res) {
+//     let sql = 'DELETE FROM products_ejs WHERE Id = "'+req.body.id+'";';
+//     let query = db.query(sql, (err, res1) =>{
+//       if(err) throw(err);
+//     wstream.write('\nproduct deleted ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
+//     console.log("Product Deleted");
+//     res.redirect("/products", 202, {title: 'Products', message: 'Product deleted'});
+// });
+
+app.get('/product-delete/:id', function(req, res){
+ let sql = 'DELETE FROM products_ejs WHERE Id = "'+req.params.id+'";';
+ let query = db.query(sql, (err, res1) =>{
+  if(err) throw(err);
+  wstream.write('\nproduct deleted ' + req.params.id + ' ' + new Date(Date.now()).toLocaleString());
+  res.redirect('/products', 202, {title: 'Products', message: 'Product deleted'}); // use the redirect to go to that funtion which will then render the page with data
+ });
+ console.log("Its Gone!");
+});
+
 // ---- CRUD on products.json
 // ---- view all products
 // app.get('/o-products', function(req, res) {
-//   res.render("o-products", {products:products, messages: ''});
+//   res.render("o-products", {products:products, message: ''});
 //   console.log("Product page now rendered");    // the log function is used to output data to the terminal. 
 // });
 
@@ -165,7 +197,7 @@ app.post('/product-update/:id', function(req, res){
 //   var index = products.map(function(products) {return products.id;}).indexOf(keyToFind)
 //   console.log(req.params.id);
 //   //parse json info then select the item with correct id 
-//   res.render("o-item", {products: products, p: index, messages: ''});
+//   res.render("o-item", {products: products, p: index, message: ''});
 //   console.log("item page now rendered");    // the log function is used to output data to the terminal. 
 // });
 
@@ -176,7 +208,7 @@ app.post('/product-update/:id', function(req, res){
 //   var p = req.params.id;
 //     delete products[p];
 //     console.log("deleted ", p);
-//     res.render("o-products", {products:products, messages: ''});
+//     res.render("o-products", {products:products, message: ''});
 // });
 
 // ---- delete one product
@@ -194,7 +226,7 @@ app.post('/product-update/:id', function(req, res){
 
 // ---- create a product, renders page with form
 // app.get("/o-add-item", function(req, res){
-//     res.render("o-add-item.ejs", {messages: ''});
+//     res.render("o-add-item.ejs", {message: ''});
 //     console.log("on the add item page!")
 // });
 
@@ -232,20 +264,20 @@ app.post('/product-update/:id', function(req, res){
 //       fs.writeFile('./models/products.json', pjson, 'utf8')
 //     }
 //   })
-//   res.redirect("/o-products", {messages: 'item added'});
+//   res.redirect("/o-products", {message: 'item added'});
 //   console.log("Item added and back to products list"); 
 // });
 
 
 // ---- view all contacts in a list 
 app.get("/contacts", function(req, res){
-    res.render("contacts.ejs", {contacts: contacts, messages: ''});
+    res.render("contacts.ejs", {contacts: contacts, message: ''});
     console.log("on contacts page!")
 });
 
 // ---- add contact page rendered 
 app.get("/add-contact", function(req, res){
-    res.render("add-contact.ejs", {messages: ''});
+    res.render("add-contact.ejs", {message: ''});
     console.log("on add contact page!")
 });
 
@@ -286,7 +318,7 @@ app.post("/add-contact", function(req, res){
     }
   })
   //res.render('contacts.ejs', {contacts: contacts, messages: 'contact added'});
-  res.redirect('/contacts', 202, {messages: 'contact added'});
+  res.redirect('/contacts', 202, {message: 'contact added'});
   console.log("Add-contact page rendered and contact added"); 
 });
 
@@ -298,7 +330,7 @@ app.get('/edit-contact/:name', function(req, res){
   }
 	
  	var indOne = contacts.filter(chooseContact);
-	res.render("edit-contact.ejs", {indOne:indOne, messages: ''});
+	res.render("edit-contact.ejs", {indOne:indOne, message: ''});
  	console.log(indOne);
 });
 
@@ -320,20 +352,19 @@ app.post('/edit-contact/:name', function(req, res){
 	json = JSON.stringify(contacts, null, 4);
 	fs.writeFile('./models/contacts.json', json, 'utf8'); // Writing the data back to the file
   console.log(w, x, y, z, index);
-  //res.render('contacts.ejs', {contacts: contacts, messages: 'contact updated'});
-  res.redirect('/contacts', 202, {contacts: contacts, messages: 'contact updated'})
+  res.redirect('/contacts', 202, {contacts: contacts, message: 'contact updated'});
 });
 
 
 
 // ---- read all users
 app.get('/users', function(req, res){
-    res.render("users", {users:users, messages: ''});
+    res.render("users", {users:users, message: ''});
     console.log("User page now rendered");
 });
 
 app.get('/about', function(req, res) {
-	res.render('about', {messages: ''});
+	res.render('about', {message: ''});
 	console.log("about page now rendered");
 });
 
@@ -378,7 +409,7 @@ const multerConfig = {
 
 // ---- file upload page rendered
 app.get('/upload', function(req, res) {
-	res.render('upload', {messages: ''});
+	res.render('upload', {message: ''});
 	console.log("upload page now rendered");
 });
 
@@ -402,9 +433,8 @@ app.post('/upload', function(req, res){
   sampleFile.mv('./images/' + filename, function(err){
     if(err)
       return res.status(500).send(err);
-    console.log("Image is " + req.files.sampleFile) //file uploading though this empty object
-    //res.render('index.ejs', {products:products, reviews:reviews, contacts:contacts, messages: 'uploaded'});
-    res.redirect('/index', 202, {products:products, reviews:reviews, contacts:contacts, messages: 'uploaded'});
+    console.log("Image is uploaded"); //file uploading though this empty object
+    res.redirect('/', 202, {products:products, reviews:reviews, contacts:contacts, message: 'uploaded'});
   });
 });
 //file upload end ------------- 
@@ -414,7 +444,7 @@ app.post('/search', function(req, res){
   let sql = 'SELECT * FROM products_ejs WHERE Name LIKE "%'+req.body.search+'%" ';
   let query = db.query(sql, (err,res1) => {
     if(err) throw err;
-    res.render('products.ejs', {res1, messages: ''});
+    res.render('products.ejs', {res1, message: ''});
     console.log("search ", res1);
   });
 });

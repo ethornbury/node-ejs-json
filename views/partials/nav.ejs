@@ -5,9 +5,7 @@
   <a href="/products" class="w3-bar-item w3-button">Products</a>
   <a href="/contacts" class="w3-bar-item w3-button">Contacts</a>
   <a href="/upload" class="w3-bar-item w3-button">File Upload</a>
-</div>
-<div class="alert">
-  <% if(messages != 0) { %> 
-    <p><%= messages %></p>
+  <% if(message) { %> 
+    <span class="w3-bar-item"><%= message %></span>
   <% } %>
 </div>

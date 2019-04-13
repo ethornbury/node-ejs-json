@@ -1,3 +1,10 @@
 Log file
 
 Connected to gearhost DB...
+all product listing and JSON reviews display4/13/2019, 5:02:01 PM
+product deleted 1 4/13/2019, 5:02:02 PM
+all product listing and JSON reviews display4/13/2019, 5:02:02 PM
+all product listing and JSON reviews display4/13/2019, 5:02:18 PM
+product deleted 2 4/13/2019, 5:02:27 PM
+all product listing and JSON reviews display4/13/2019, 5:02:28 PM
+all product listing and JSON reviews display4/13/2019, 5:02:40 PM

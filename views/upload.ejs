@@ -14,10 +14,11 @@
                     </div>
                     <div class="w3-col l3">
                         <h2>File uploader</h2>
-                        <form method="POST" action="/upload" enctype="multipart/form-data">
-                        <!-- <form method="POST" action="/uploader" novalidate> -->
-                            <input  type="file" name="photo" />
-                            <input type="submit" value="upload photo" />   
+                        <!-- my original <form method="POST" action="/upload" enctype="multipart/form-data"> -->
+                        <form ref="uploadForm" method="post" enctype="multipart/form-data">
+                            <!-- my original <input  type="file" name="photo" /> -->
+                            <input class="w3-btn" type="file" name="sampleFile" /> 
+                            <input type="submit" value="upload file" />   
                         </form>
                     </div>
                     <div class="w3-col l3">

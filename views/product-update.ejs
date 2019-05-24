@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include partials/header %>
+    </head>
+    <body>
+      <div class="w3-container l3 w3-text-grey w3-padding" >
+        <% include partials/nav %>
+            <div class="w3-row ">
+                <div class="w3-col l1">
+                    <p></p>
+                </div>
+                <div class="w3-col l3">
+                    <% res1.forEach(function(product) { %>
+                      <h2>Update Item <%= product.Id %></h2>
+                    <!--    <form accept-charset="UTF-8" action="/add-contact" method="post" class="w3-container">
+                    -->
+                        <form action="/product-update" method="post" class="w3-container">        
+                            <div class="item">
+                                <label for="Name">Name</label>
+                                <br />
+                                <input name="name" type="text" class="w3-input" value  ="<%= product.Name %>"/>
+                                <br />
+                                <label for="Price">Price</label>
+                                <br />
+                                <input name="price" type="numeric" class="w3-input" placeholder="<%= product.Price %>"/>
+                                <br />
+                                <label for="Descript">Description</label>
+                                <br />
+                                <input name="descript" type="text" class="w3-input" placeholder="<%= product.Descript %>"/>
+                                <br />
+                                <label for="Image">Image</label>
+                                <br />
+                                <input name="image" type="text" class="w3-input" placeholder="<%= product.Image %>"/>
+                                <br />
+                                <button class="w3-btn w3-teal">Add</button>
+                            </div>
+                        </form>
+                    <% }); %> 
+                </div>
+                <div class="w3-col l3">
+                    <h2>&nbsp;</h2>
+                </div>
+                <div class="w3-col l3">
+                     <h2>Add Item</h2>
+                    <br />
+                    <a href="/add-item" class="w3-button w3-teal">Add new Item</a>
+                </div>
+            </div>
+        <% include partials/footer %>
+      </div>
+  </body>
+</html>
+  

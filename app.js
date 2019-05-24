@@ -169,7 +169,7 @@ app.post("/add-contact", function(req, res){
 // ---- update a contact
 app.get('/edit-contact/:name', function(req, res){
   console.log("edit-contact page renderned");
-  function chooseContact(indOne){
+  function chooseContact(indOne){ 
 		return indOne.name === req.params.name;	 		
   }
 	
@@ -264,6 +264,11 @@ app.post('/upload',multer(multerConfig).single('photo'),function(req,res){
 });
 
 //file upload end ------------- 
+app.get('/download', function(req, res) {
+  var file = __dirname +'/public/emer.txt';
+	res.download(file);
+	console.log("download of txt file");
+});
 
 // ---- This function gets the application up and running on the development server.
 app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){

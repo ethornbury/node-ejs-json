@@ -15,7 +15,7 @@
                       <h2>Update Item <%= product.Id %></h2>
                     <!--    <form accept-charset="UTF-8" action="/add-contact" method="post" class="w3-container">
                     -->
-                        <form action="/product-update" method="post" class="w3-container">        
+                        <form action="/product-update/<%= product.Id %>" method="post" class="w3-container">        
                             <div class="item">
                                 <label for="Name">Name</label>
                                 <br />
@@ -33,7 +33,7 @@
                                 <br />
                                 <input name="image" type="text" class="w3-input" placeholder="<%= product.Image %>"/>
                                 <br />
-                                <button class="w3-btn w3-teal">Add</button>
+                                <button class="w3-btn w3-teal">Update</button>
                             </div>
                         </form>
                     <% }); %> 

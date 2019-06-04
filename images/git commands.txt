@@ -1,0 +1,81 @@
+do once only
+ - git init - to first initialise a project
+ - in github.com create a repo
+ 
+ in gitbash
+	- git add *
+	- git add .
+	- git add -A (same as: git add --all)
+
+	https://stackoverflow.com/questions/572549/difference-between-git-add-a-and-git-add
+	
+    git add . 		 stages new and modified, without deleted
+	# Changes to be committed:
+	#   new file:   add-me
+	#   modified:   change-me
+	# Changed but not updated:
+	#   deleted:    delete-me
+	
+    git add -u 		 stages modified and deleted, without new
+	# Changes to be committed:
+	#   modified:   change-me
+	#   deleted:    delete-me
+	# Untracked files:
+	#   add-me
+	
+	git add -A		 stages All
+	# Changes to be committed:
+	#   new file:   add-me
+	#   modified:   change-me
+	#   deleted:    delete-me
+	
+ 
+	- git commit -m "first commit"
+
+		git remote add origin https://github.com/ethornbury/githubex.git
+
+		git push -u origin master
+		
+		
+		git config --global user.name "whatever"
+		git config --global user.name
+		git config --global user.email "whatever@email.com"
+		git config --global user.email
+		
+git remote set-url origin https://	
+	
+3 steps
+ git add *
+ git commit -m "your message"
+ git push -u origin master
+ 
+git status
+git remote -v
+
+---------for collaboration
+one person - new app in c9 - connect to github
+in github ub=nder settings add new collaborators
+	--the collabotator
+create an empty folder in a workspace
+cd into new folder
+git init
+git pull (clone link from github)
+git add .
+git commit -m "my commit"
+git remote add origin https//
+git push
+
+when working --
+git pull
+git checkout -b branchname
+git add .
+git commit -m "message"
+git push origin branchname
+git checkout master
+git merge branchname
+git push 
+
+
+
+ 
+ 

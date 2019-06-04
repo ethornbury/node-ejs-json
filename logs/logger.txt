@@ -1,4 +1,5 @@
 Log file
 
-Connected to gearhost DB...
-all product listing and JSON reviews display5/24/2019, 8:07:47 PM
+Connected to gearhost DB... today
+all product listing and JSON reviews display6/4/2019, 9:24:00 PM
+product edit page 1 6/4/2019, 9:24:01 PM

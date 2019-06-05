@@ -57,8 +57,7 @@ db.connect(function (err){
  }
 });
 
-
-
+var message = " ";
 // This function calls the index view when somebody goes to the site - routes.
 app.get('/', function(req, res) {
   // renders the index page showing products, reviews annd contacts from json files
@@ -119,6 +118,8 @@ app.get('/products', function(req, res){
         console.log(results[1]); // [{2: 2}]
         var res1 = results[0];
         var res2 = results[1];
+		//var res3 = results[2];
+		
 		var res3 = JSON.stringify(results[2]); //to display data, need to JSON.stringify
 		console.log('res3 ', res3);
         res.render('products.ejs', {res1, res2, res3, reviews, title: 'Products listing', message: ' '});
@@ -320,7 +321,7 @@ app.post("/add-contact", function(req, res){
     if(err){
      throw(err);
     } else {
-      contacts.push(newContact); // add the data to the json file based on the declared variable above
+      contacts.push(newContact); // add the data to the json file based on the declared variable above using push()
       json = JSON.stringify(contacts, null, 4); // converts the data to a json file and the null and 4 represent how it is structuere. 4 is indententation 
       fs.writeFile('./models/contacts.json', json, 'utf8')
     }
